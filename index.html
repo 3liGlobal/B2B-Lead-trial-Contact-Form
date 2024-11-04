@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      body {
+        font-family: Arial, Helvetica, sans-serif;
+      }
+      * {
+        box-sizing: border-box;
+      }
+
+      input[type="text"],
+      input[type="email"],
+      input[type="tel"],
+      select,
+      textarea {
+        color: #fff;
+        background-color: #353338;
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #4e4c50;
+        border-radius: 4px;
+        box-sizing: border-box;
+        margin-top: 6px;
+        margin-bottom: 16px;
+        resize: vertical;
+      }
+
+      button {
+        width: 100%;
+        padding: 12px 0px;
+        font-size: 16px;
+        font-weight: bold;
+        color: #000;
+        background-color: #fff;
+        border: none;
+        border-radius: 25px;
+        text-align: center;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+      }
+      label {
+        color: #fff;
+      }
+      option {
+        color: #fff;
+      }
+      button:hover {
+        background-color: #f0f0f0;
+      }
+
+      .container {
+        border-radius: 5px;
+        background-color: black;
+        padding: 20px;
+      }
+      .main-1 {
+        display: flex;
+        flex-direction: row;
+        column-gap: 50px;
+      }
+      .left-d {
+        width: 50%;
+      }
+      .right-d {
+        width: 50%;
+      }
+      @media only screen and (max-width: 600px) {
+        .main-1 {
+          display: flex;
+          flex-direction: column;
+          column-gap: 50px;
+        }
+        .left-d {
+          width: 100%;
+        }
+        .right-d {
+          width: 100%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <form id="contactForm">
+        <div class="main-1">
+          <div class="left-d">
+            <label for="name">Name *</label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              maxlength="70"
+              pattern="[A-Za-z\s]+"
+              title="Only Latin letters are allowed, up to 70 characters."
+              required
+            />
+
+            <label for="email">E-mail *</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              title="Enter a valid email address."
+              required
+            />
+
+            <label for="phone">Phone *</label>
+            <input
+              type="tel"
+              id="phone"
+              name="phone"
+              pattern="[0-9]+"
+              title="Only digits are allowed."
+              required
+              oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+            />
+
+            <label for="company-name">Company Name *</label>
+            <input
+              type="text"
+              id="company-name"
+              name="company-name"
+              maxlength="70"
+              pattern="[A-Za-z\s]+"
+              title="up to 70 characters."
+              required
+            />
+
+            <label for="company-activity">Company Activity *</label>
+            <select id="company-activity" name="company-activity">
+              <option value="select" selected disabled>Please Select</option>
+              <option value="Hotel">Hotel</option>
+              <option value="Restaurant/Lounge">Restaurant/Lounge</option>
+              <option value="Shop">Shop</option>
+              <option value="Club">Club</option>
+              <option value="Others">Others</option>
+            </select>
+          </div>
+          <div class="right-d">
+            <label for="subject">Message</label>
+            <textarea
+              id="subject"
+              name="subject"
+              style="height: 310px"
+            ></textarea>
+
+            <button type="submit">Submit</button>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <script>
+      document.getElementById("contactForm").addEventListener("submit", async function (event) {
+          event.preventDefault();
+          const formData = {
+            properties: {
+              firstname: document.getElementById("name").value,
+              email: document.getElementById("email").value,
+              phone: document.getElementById("phone").value,
+              company: document.getElementById("company-name").value,
+              company_activity: document.getElementById("company-activity").value,
+              message: document.getElementById("subject").value,
+              created_from: "B2B Lead trial",
+            },
+          };
+
+          const API_URL = "https://middlewares.azurewebsites.net/api/B2BLeadtrialContactForm?code=-jWgSzdJHmbrieRbPymbbcFa1-DrlU906_RYMoJSaVODAzFuHVDR_A%3D%3D";
+
+          try {
+            const response = await fetch(API_URL, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(formData),
+            });
+
+            if (response.ok) {
+              document.getElementById("contactForm").reset();
+              window.location.href = "https://3liglobal.github.io/Staging-Zoho-EU-Form-Thank-You-Page/";
+            } else {
+              // alert(
+              //   "There was an error creating the contact. Please try again."
+              // );
+            }
+          } catch (error) {
+            console.error("Error:", error);
+            alert("There was an error creating the contact. Please try again.");
+          }
+        });
+    </script>
+  </body>
+</html>
