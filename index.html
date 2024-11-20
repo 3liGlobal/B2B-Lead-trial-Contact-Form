@@ -67,6 +67,46 @@
       .right-d {
         width: 50%;
       }
+      .error {
+        color: red;
+        font-size: 12px;
+        margin-top: -8px;
+        margin-bottom: 8px;
+      }
+      input.error-border,
+      select.error-border {
+        border: 1px solid red;
+      }
+
+      .loader {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 2px solid transparent;
+      border-top: 2px solid #3498db;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-left: 10px;
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    button:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+
       @media only screen and (max-width: 600px) {
         .main-1 {
           display: flex;
@@ -87,57 +127,63 @@
       <form id="contactForm">
         <div class="main-1">
           <div class="left-d">
-            <label for="name">Name *</label>
-            <input
-              type="text"
-              id="name"
-              name="name"
-              maxlength="70"
-              pattern="[A-Za-z\s]+"
-              title="Only Latin letters are allowed, up to 70 characters."
-              required
-            />
+            <div>
+              <label for="name">Name * </label>
+              <input
+                type="text"
+                id="name"
+                name="name"
+                maxlength="70"
+                pattern="[A-Za-z\s]+"
+                title="Only Latin letters are allowed, up to 70 characters."
+              />
+              <div class="error" id="nameError"></div>
+            </div>
 
-            <label for="email">E-mail *</label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              title="Enter a valid email address."
-              required
-            />
+            <div>
+              <label for="email">E-mail * </label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                title="Enter a valid email address."
+              />
+              <div class="error" id="emailError"></div>
+            </div>
 
-            <label for="phone">Phone *</label>
-            <input
-              type="tel"
-              id="phone"
-              name="phone"
-              pattern="[0-9]+"
-              title="Only digits are allowed."
-              required
-              oninput="this.value = this.value.replace(/[^0-9]/g, '')"
-            />
+            <div>
+              <label for="phone">Phone *</label>
+              <input
+                type="tel"
+                id="phone"
+                name="phone"
+                pattern="[0-9]+"
+                title="Only digits are allowed."
+                oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+              />
+              <div class="error" id="phoneError"></div>
+            </div>
 
-            <label for="company-name">Company Name *</label>
-            <input
-              type="text"
-              id="company-name"
-              name="company-name"
-              maxlength="70"
-              pattern="[A-Za-z\s]+"
-              title="up to 70 characters."
-              required
-            />
+            <div>
+              <label for="company-name">Company Name *</label>
+              <input type="text" id="company-name" name="company-name"
+              maxlength="70" pattern="[A-Za-z\s/.,'’\"!@#$%^&*()\-_=+:;?]+
+              title="up to 70 characters." />
+              <div class="error" id="companyNameError"></div>
+            </div>
 
-            <label for="company-activity">Company Activity *</label>
-            <select id="company-activity" name="company-activity">
-              <option value="select" selected disabled>Please Select</option>
-              <option value="Hotel">Hotel</option>
-              <option value="Restaurant/Lounge">Restaurant/Lounge</option>
-              <option value="Shop">Shop</option>
-              <option value="Club">Club</option>
-              <option value="Others">Others</option>
-            </select>
+            <div>
+              <label for="company-activity">Company Activity *</label>
+              <select id="company-activity" name="company-activity" required>
+                <option value="select" selected disabled>Please Select</option>
+                <option value="Hotel">Hotel</option>
+                <option value="Restaurant/Lounge">Restaurant/Lounge</option>
+                <option value="Shop">Shop</option>
+                <option value="Club">Club</option>
+                <option value="Others">Others</option>
+              </select>
+              <div class="error" id="companyActivityError"></div>
+            </div>
           </div>
           <div class="right-d">
             <label for="subject">Message</label>
@@ -147,49 +193,156 @@
               style="height: 310px"
             ></textarea>
 
-            <button type="submit">Submit</button>
+            <div style="display: flex; align-items:center;">
+              <button type="submit" id="submitButton">Submit</button>
+              <span class="loader hidden" id="loader"></span>
+            </div>
           </div>
         </div>
       </form>
     </div>
 
     <script>
-      document.getElementById("contactForm").addEventListener("submit", async function (event) {
+      const form = document.getElementById("contactForm");
+      const button = document.getElementById("submitButton");
+      const loader = document.getElementById("loader");
+      document
+        .getElementById("contactForm")
+        .addEventListener("submit", async function (event) {
           event.preventDefault();
-          const formData = {
-            properties: {
-              firstname: document.getElementById("name").value,
-              email: document.getElementById("email").value,
-              phone: document.getElementById("phone").value,
-              company: document.getElementById("company-name").value,
-              company_activity: document.getElementById("company-activity").value,
-              message: document.getElementById("subject").value,
-              created_from: "B2B Lead trial",
-            },
+          let isValid = true;
+
+          const showError = (id, fieldId, message) => {
+            document.getElementById(id).textContent = message;
+            const field = document.getElementById(fieldId);
+            if (field) {
+              field.classList.add("error-border");
+            }
           };
 
-          const API_URL = "https://middlewares.azurewebsites.net/api/B2BLeadtrialContactForm?code=-jWgSzdJHmbrieRbPymbbcFa1-DrlU906_RYMoJSaVODAzFuHVDR_A%3D%3D";
-
-          try {
-            const response = await fetch(API_URL, {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify(formData),
-            });
-
-            if (response.ok) {
-              document.getElementById("contactForm").reset();
-              window.location.href = "https://3liglobal.github.io/Staging-Zoho-EU-Form-Thank-You-Page/";
-            } else {
-              // alert(
-              //   "There was an error creating the contact. Please try again."
-              // );
+          const clearError = (id, fieldId) => {
+            document.getElementById(id).textContent = "";
+            const field = document.getElementById(fieldId);
+            if (field) {
+              field.classList.remove("error-border");
             }
-          } catch (error) {
-            console.error("Error:", error);
-            alert("There was an error creating the contact. Please try again.");
+          };
+
+          // Name Validation
+          const name = document.getElementById("name").value;
+          if (!name.match(/^[A-Za-zÀ-ÿ\s]{1,70}$/)) {
+            showError("nameError", "name", "Please enter a valid name.");
+            isValid = false;
+          } else {
+            clearError("nameError", "name");
+          }
+
+          // Email Validation
+          const email = document.getElementById("email").value;
+          if (
+            !email.match(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)
+          ) {
+            showError(
+              "emailError",
+              "email",
+              "Please enter a valid email address."
+            );
+            isValid = false;
+          } else {
+            clearError("emailError", "email");
+          }
+
+          // Phone Validation
+          const phone = document.getElementById("phone").value;
+          if (!phone.match(/^[0-9]+$/)) {
+            showError(
+              "phoneError",
+              "phone",
+              "Please enter a valid phone number."
+            );
+            isValid = false;
+          } else {
+            clearError("phoneError", "phone");
+          }
+
+          // Company Name Validation
+          const companyName = document.getElementById("company-name").value;
+          if (
+            !companyName.match(/^[A-Za-zÀ-ÿ\s/.,'’"!@#$%^&*()-_+=:;?]{1,70}$/)
+          ) {
+            showError(
+              "companyNameError",
+              "company-name",
+              "Please enter a valid company name."
+            );
+            isValid = false;
+          } else {
+            clearError("companyNameError", "company-name");
+          }
+
+          // Company Activity Validation
+          const companyActivity =
+            document.getElementById("company-activity").value;
+          if (companyActivity == "select") {
+            showError(
+              "companyActivityError",
+              "company-activity",
+              "Please select a company activity."
+            );
+            isValid = false;
+          } else {
+            clearError("companyActivityError", "company-activity");
+          }
+
+          button.disabled = true; // Disable the button
+          loader.classList.remove("hidden"); // Show the loader
+
+          setTimeout(() => {
+            button.disabled = false; // Re-enable the button after 5 seconds
+            loader.classList.add("hidden"); // Hide the loader
+          }, 3000);
+
+          if (isValid) {
+            const formData = {
+              properties: {
+                firstname: document.getElementById("name").value,
+                email: document.getElementById("email").value,
+                phone: document.getElementById("phone").value,
+                company: document.getElementById("company-name").value,
+                company_activity:
+                  document.getElementById("company-activity").value,
+                message: document.getElementById("subject").value,
+                created_from: "B2B Lead trial",
+              },
+            };
+
+            const API_URL =
+              "https://middlewares.azurewebsites.net/api/B2BLeadtrialContactForm?code=-jWgSzdJHmbrieRbPymbbcFa1-DrlU906_RYMoJSaVODAzFuHVDR_A%3D%3D";
+
+            try {
+              const response = await fetch(API_URL, {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify(formData),
+              });
+
+              if (response.ok) {
+                document.getElementById("contactForm").reset();
+                window.location.href =
+                  "https://3liglobal.github.io/Staging-Zoho-EU-Form-Thank-You-Page/";
+              } else {
+                // alert(
+                //   "There was an error creating the contact. Please try again."
+                // );
+              }
+            } catch (error) {
+              console.error("Error:", error);
+              alert(
+                "There was an error creating the contact. Please try again."
+              );
+            }
           }
         });
     </script>
