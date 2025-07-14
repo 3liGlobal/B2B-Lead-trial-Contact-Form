@@ -2,7 +2,9 @@
 <html>
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="https://fonts.cdnfonts.com/css/hvdtrial-brandon-grotesque" rel="stylesheet">
     <style>
+      @import url('https://fonts.cdnfonts.com/css/hvdtrial-brandon-grotesque');
       body {
         font-family: Arial, Helvetica, sans-serif;
       }
@@ -15,57 +17,90 @@
       input[type="tel"],
       select,
       textarea {
-        color: #fff;
-        background-color: #353338;
+        background: #fff;
+        border: 1px solid #e5e5e3;
+        -webkit-border-radius: 2px;
+        -moz-border-radius: 2px;
+        border-radius: 6px;
+        padding: 19.5px;
+        font-size: 13px;
         width: 100%;
-        padding: 12px;
-        border: 1px solid #4e4c50;
-        border-radius: 4px;
         box-sizing: border-box;
         margin-top: 6px;
         margin-bottom: 16px;
         resize: vertical;
+        outline: none;
       }
-
+      input:hover,
+      select:hover,
+      textarea:hover {
+        border: 1px solid rgba(157, 157, 157, 0.75);
+      }
+      input:focus,
+      select:focus,
+      textarea:focus {
+        border: 1px solid rgb(0 0 0 / 75%) !important;
+        -webkit-box-shadow: 0 0 5px rgba(0, 0, 0, 0.5) !important;
+        -moz-box-shadow: 0 0 5px rgba(82, 168, 236, 0.5) !important;
+        box-shadow: 0 0 5px rgb(0 4 6 / 50%) !important;
+      }
+      .sterik {
+        color: #ff0000 !important;
+        font-weight: normal;
+        margin-left: 0px;
+        padding: 0;
+        font-size: 13px !important;
+      }
       button {
-        width: 100%;
-        padding: 12px 0px;
+        font-family: 'HvDTrial Brandon Grotesque', sans-serif;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-weight: 400;
         font-size: 16px;
-        font-weight: bold;
-        color: #000;
-        background-color: #fff;
-        border: none;
-        border-radius: 25px;
-        text-align: center;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        padding: 15px 48px;
+        border-radius: 40px;
+        color: #fff;
+        border: 0px solid;
+        background-image: linear-gradient(to right, #6e0f9d, #6a16d4);
+        background: -moz-linear-gradient(right, #6e0f9d, #6a16d4);
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#2f9eec', endColorstr='#1988d6');
+        -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+        -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+        text-shadow: 0 1px 0 rgba(0, 0, 0, 0.25);
       }
       label {
-        color: #fff;
+        font-weight: 400;
+        font-size: 14px;
+        color: #444;
       }
       option {
-        color: #fff;
+        color: #444;
       }
       button:hover {
-        background-color: #f0f0f0;
+        background: #1988d6;
+        background-image: linear-gradient(to right, #6e0f9d, #6e0f9d);
       }
 
       .container {
-        border-radius: 5px;
-        background-color: black;
-        padding: 20px;
+        background-attachment: fixed;
+        background-color: #f7f8fa;
+        color: #444444;
+        font-family: "Roboto", sans-serif;
+        margin: 0 auto;
+        border: 1px solid #ebebed;
+        border-radius: 24px;
+        padding: 3rem;
       }
       .main-1 {
         display: flex;
-        flex-direction: row;
-        column-gap: 50px;
+        flex-direction: column;
       }
       .left-d {
-        width: 50%;
+        width: 100%;
       }
       .right-d {
-        width: 50%;
+        width: 100%;
       }
       .error {
         color: red;
@@ -79,46 +114,32 @@
       }
 
       .loader {
-      display: inline-block;
-      width: 16px;
-      height: 16px;
-      border: 2px solid transparent;
-      border-top: 2px solid #3498db;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-      margin-left: 10px;
-    }
-
-    @keyframes spin {
-      0% {
-        transform: rotate(0deg);
+        display: inline-block;
+        width: 16px;
+        height: 16px;
+        border: 2px solid transparent;
+        border-top: 2px solid #3498db;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin-left: 10px;
       }
-      100% {
-        transform: rotate(360deg);
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
       }
-    }
 
-    .hidden {
-      display: none;
-    }
+      .hidden {
+        display: none;
+      }
 
-    button:disabled {
-      background-color: #ccc;
-      cursor: not-allowed;
-    }
-
-      @media only screen and (max-width: 600px) {
-        .main-1 {
-          display: flex;
-          flex-direction: column;
-          column-gap: 50px;
-        }
-        .left-d {
-          width: 100%;
-        }
-        .right-d {
-          width: 100%;
-        }
+      button:disabled {
+        background-color: #ccc;
+        cursor: not-allowed;
       }
     </style>
   </head>
@@ -128,7 +149,7 @@
         <div class="main-1">
           <div class="left-d">
             <div>
-              <label for="name">Name * </label>
+              <label for="name">Name </label><span class="sterik">*</span>
               <input
                 type="text"
                 id="name"
@@ -141,7 +162,7 @@
             </div>
 
             <div>
-              <label for="email">E-mail * </label>
+              <label for="email">Email </label><span class="sterik">*</span>
               <input
                 type="email"
                 id="email"
@@ -152,7 +173,7 @@
             </div>
 
             <div>
-              <label for="phone">Phone *</label>
+              <label for="phone">Phone </label><span class="sterik">*</span>
               <input
                 type="tel"
                 id="phone"
@@ -165,15 +186,21 @@
             </div>
 
             <div>
-              <label for="company-name">Company Name *</label>
-              <input type="text" id="company-name" name="company-name"
-              maxlength="70" pattern="[A-Za-z\s/.,'’\"!@#$%^&*()\-_=+:;?]+
-              title="up to 70 characters." />
+              <label for="company-name">Company Name </label><span class="sterik">*</span>
+              <input
+                type="text"
+                id="company-name"
+                name="company-name"
+                maxlength="70"
+                pattern="[A-Za-z\s/.,'’\"
+                !@#$%^&*()\-_="+:;?]+"
+                title="up to 70 characters."
+              />
               <div class="error" id="companyNameError"></div>
             </div>
 
             <div>
-              <label for="company-activity">Company Activity *</label>
+              <label for="company-activity">Company Activity </label><span class="sterik">*</span>
               <select id="company-activity" name="company-activity" required>
                 <option value="select" selected disabled>Please Select</option>
                 <option value="Hotel">Hotel</option>
@@ -193,7 +220,7 @@
               style="height: 310px"
             ></textarea>
 
-            <div style="display: flex; align-items:center;">
+            <div style="display: flex; align-items: center">
               <button type="submit" id="submitButton">Submit</button>
               <span class="loader hidden" id="loader"></span>
             </div>
